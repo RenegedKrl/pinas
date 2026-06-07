@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diagnóstico Gratuito | PINAS.studio</title>
+  <meta name="description"
+    content="Responda 5 perguntas e receba um diagnóstico personalizado para o site da sua empresa." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="icon" href="logo pinas/pinas p.png" type="image/png" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --red: #e02020;
+      --red-bright: #ff2a2a;
+      --red-dark: #a01010;
+      --red-glow: rgba(224, 32, 32, 0.3);
+      --black: #050505;
+      --black-2: #0e0e0e;
+      --black-3: #161616;
+      --black-4: #1f1f1f;
+      --white: #ffffff;
+      --white-80: rgba(255, 255, 255, 0.8);
+      --white-50: rgba(255, 255, 255, 0.5);
+      --white-20: rgba(255, 255, 255, 0.2);
+      --white-10: rgba(255, 255, 255, 0.1);
+      --white-5: rgba(255, 255, 255, 0.05);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-red: rgba(224, 32, 32, 0.35);
+      --font-main: 'Inter', sans-serif;
+      --font-display: 'Outfit', sans-serif;
+      --radius: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--black);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--black);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--red-dark);
+      border-radius: 3px;
+    }
+
+    /* BG */
+    .bg-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 20%, rgba(224, 32, 32, 0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 80% 80%, rgba(224, 32, 32, 0.05) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* HEADER */
+    .quiz-header {
+      position: relative;
+      z-index: 10;
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      background: rgba(5, 5, 5, 0.8);
+      backdrop-filter: blur(16px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--white);
+    }
+
+    .logo-icon {
+      color: var(--red-bright);
+      font-size: 1.3rem;
+    }
+
+    .logo-accent {
+      color: var(--red-bright);
+    }
+
+    .header-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--white-50);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .header-back:hover {
+      color: var(--white);
+    }
+
+    /* PROGRESS */
+    .progress-bar-wrap {
+      position: relative;
+      z-index: 10;
+      padding: 20px 32px 0;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--white-50);
+      margin-bottom: 10px;
+    }
+
+    .progress-pct {
+      color: var(--red-bright);
+      font-weight: 700;
+    }
+
+    .progress-track {
+      height: 4px;
+      background: var(--white-10);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--red-dark), var(--red-bright));
+      border-radius: 4px;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* MAIN */
+    .quiz-main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* CARD */
+    .quiz-card {
+      background: var(--black-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px;
+      width: 100%;
+      max-width: 700px;
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+      animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .quiz-card.exit {
+      animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes slideOut {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      to {
+        opacity: 0;
+        transform: translateY(-24px);
+      }
+    }
+
+    .step-badge {
+      display: inline-block;
+      background: rgba(224, 32, 32, 0.12);
+      border: 1px solid var(--border-red);
+      color: var(--red-bright);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 99px;
+      margin-bottom: 24px;
+    }
+
+    .quiz-question {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .quiz-hint {
+      font-size: 0.9rem;
+      color: var(--white-50);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    /* TEXT INPUT */
+    .quiz-input {
+      width: 100%;
+      background: var(--black-2);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      color: var(--white);
+      font-size: 1rem;
+      font-family: var(--font-main);
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+      margin-bottom: 8px;
+    }
+
+    .quiz-input::placeholder {
+      color: var(--white-20);
+    }
+
+    .quiz-input:focus {
+      border-color: var(--red-bright);
+      box-shadow: 0 0 0 4px rgba(224, 32, 32, 0.1);
+    }
+
+    .quiz-textarea {
+      resize: vertical;
+      min-height: 130px;
+    }
+
+    /* DIVIDER */
+    .quiz-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 28px 0;
+    }
+
+    /* OPTION ITEMS */
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--black-4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+    }
+
+    .option-item:hover {
+      border-color: var(--border-red);
+      background: rgba(224, 32, 32, 0.05);
+    }
+
+    .option-item.selected {
+      border-color: var(--red-bright);
+      background: rgba(224, 32, 32, 0.1);
+      box-shadow: 0 0 0 1px var(--red-bright);
+    }
+
+    .option-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .option-num {
+      width: 32px;
+      height: 32px;
+      background: var(--white-10);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--white-50);
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+
+    .option-item.selected .option-num {
+      background: var(--red);
+      color: var(--white);
+    }
+
+    .option-text h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .option-text p {
+      font-size: 0.8rem;
+      color: var(--white-50);
+    }
+
+    .option-radio {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      flex-shrink: 0;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .option-item.selected .option-radio {
+      border-color: var(--red-bright);
+      background: var(--red-bright);
+    }
+
+    .option-item.selected .option-radio::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* NAVIGATION */
+    .quiz-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 28px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white-5);
+      border: 1px solid var(--border);
+      color: var(--white-80);
+      padding: 14px 24px;
+      border-radius: 99px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-main);
+      transition: var(--transition);
+    }
+
+    .btn-back:hover {
+      background: var(--white-10);
+      color: var(--white);
+    }
+
+    .btn-next {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--red), var(--red-dark));
+      color: var(--white);
+      padding: 14px 32px;
+      border-radius: 99px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font-main);
+      border: none;
+      outline: none;
+      box-shadow: 0 4px 24px var(--red-glow);
+      transition: var(--transition);
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .btn-next::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 0%;
+      background: linear-gradient(135deg, var(--red-bright), var(--red));
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: -1;
+    }
+
+    .btn-next:hover::before {
+      width: 100%;
+    }
+
+    .btn-next:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px var(--red-glow);
+    }
+
+    .btn-next:disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .btn-arrow {
+      font-size: 1.1rem;
+      transition: transform 0.2s;
+    }
+
+    .btn-next:hover .btn-arrow {
+      transform: translateX(4px);
+    }
+
+    /* WHATSAPP BTN */
+    .btn-whatsapp {
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      box-shadow: 0 4px 24px rgba(37, 211, 102, 0.3);
+    }
+
+    .btn-whatsapp::before {
+      background: linear-gradient(135deg, #2de070, #25d366);
+    }
+
+    .btn-whatsapp:hover {
+      box-shadow: 0 8px 32px rgba(37, 211, 102, 0.4);
+    }
+
+    /* FOOTER */
+    .quiz-footer {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.78rem;
+      color: var(--white-50);
+      border-top: 1px solid var(--border);
+    }
+
+    .quiz-footer a {
+      color: var(--white-50);
+      text-decoration: none;
+    }
+
+    .quiz-footer a:hover {
+      color: var(--red-bright);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .quiz-card {
+        padding: 32px 24px;
+      }
+
+      .quiz-header {
+        padding: 16px 20px;
+      }
+
+      .progress-bar-wrap {
+        padding: 16px 20px 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-glow"></div>
+  <div class="bg-grid"></div>
+
+  <!-- HEADER -->
+  <header class="quiz-header">
+    <a href="index.html" class="logo">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">PINAS<span class="logo-accent">.</span>studio</span>
+    </a>
+    <a href="index.html" class="header-back">← Voltar ao site</a>
+  </header>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-bar-wrap" id="progress-wrap">
+    <div class="progress-meta">
+      <span id="progress-label">Pergunta 1 de 6</span>
+      <span class="progress-pct" id="progress-pct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="quiz-main">
+    <div class="quiz-card" id="quiz-card">
+      <!-- JS injeta o conteúdo aqui -->
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="quiz-footer">
+    <p>© 2025 <a href="index.html">PINAS.studio</a> · Seus dados são tratados com segurança e sigilo.</p>
+  </footer>
+
+  <script>
+    // ===== QUIZ DATA =====
+    const questions = [
+      {
+        id: 1,
+        badge: 'PERGUNTA 1',
+        question: 'Qual é o nome da sua empresa?',
+        hint: 'Pode ser o nome fantasia ou como você é conhecido no mercado.',
+        type: 'text',
+        placeholder: 'Ex: Padaria Pão Quente',
+        key: 'empresa'
+      },
+      {
+        id: 2,
+        badge: 'PERGUNTA 2',
+        question: 'Há quanto tempo a empresa existe?',
+        hint: 'Selecione a opção que mais se aproxima da sua realidade.',
+        type: 'radio',
+        key: 'tempo',
+        options: [
+          { num: '01', label: 'Estou começando agora', desc: 'Empresa nova, ainda não abriu' },
+          { num: '02', label: 'Menos de 1 ano', desc: 'Já estou no mercado, mas é recente' },
+          { num: '03', label: 'Entre 1 e 3 anos', desc: 'Crescendo e estruturando' },
+          { num: '04', label: 'Entre 3 e 10 anos', desc: 'Empresa consolidada' },
+          { num: '05', label: 'Mais de 10 anos', desc: 'Tradição e autoridade no mercado' }
+        ]
+      },
+      {
+        id: 3,
+        badge: 'PERGUNTA 3',
+        question: 'Qual é o nicho da sua empresa?',
+        hint: 'Em que segmento ou área você atua?',
+        type: 'text',
+        placeholder: 'Ex: Restaurante, advocacia, estética, e-commerce...',
+        key: 'nicho'
+      },
+      {
+        id: 4,
+        badge: 'PERGUNTA 4',
+        question: 'Quem são seus principais concorrentes?',
+        hint: 'Cite até 3 concorrentes',
+        type: 'textarea',
+        placeholder: 'Ex: Empresa A — empresaA.com.br\nEmpresa B — empresaB.com\nEmpresa C',
+        key: 'concorrentes'
+      },
+      {
+        id: 5,
+        badge: 'PERGUNTA 5',
+        question: 'Qual tipo de criação ou serviço você precisa?',
+        hint: 'Selecione todas as opções que descrevem o que você busca.',
+        type: 'checkbox',
+        key: 'servicos_busca',
+        options: [
+          { num: '01', label: 'Landing Page', desc: 'Página única focada em converter visitantes em clientes' },
+          { num: '02', label: 'Site Completo', desc: 'Site institucional, e-commerce, blog ou portal profissional' },
+          { num: '03', label: 'Gestão de Tráfego', desc: 'Anúncios pagos no Google, Facebook, Instagram e TikTok' },
+          { num: '04', label: 'Posicionamento Estratégico', desc: 'Funis de vendas, branding e plano completo de marketing' },
+          { num: '05', label: 'Implementação de CRM', desc: 'Automação de vendas, funil de atendimento e gestão de leads' },
+          { num: '06', label: 'Design Gráfico', desc: 'Identidade visual, logotipo, manual de marca e artes' }
+        ]
+      },
+      {
+        id: 6,
+        badge: 'ÚLTIMA PERGUNTA',
+        question: 'O que você espera conquistar com o seu site?',
+        hint: 'Selecione todas as opções que fazem sentido pra você.',
+        type: 'checkbox',
+        key: 'objetivos',
+        options: [
+          { num: '01', label: 'Atrair mais clientes', desc: 'Aparecer no Google e gerar leads' },
+          { num: '02', label: 'Vender online', desc: 'Loja virtual ou pagamentos no site' },
+          { num: '03', label: 'Passar mais profissionalismo', desc: 'Ter uma vitrine de qualidade' },
+          { num: '04', label: 'Ter autoridade no mercado', desc: 'Ser referência e ganhar confiança' },
+          { num: '05', label: 'Automatizar atendimento', desc: 'WhatsApp, formulários, agendamentos' },
+          { num: '06', label: 'Superar meus concorrentes', desc: 'Ter um site melhor que o deles' }
+        ]
+      }
+    ];
+
+    // ===== STATE =====
+    let current = 0;
+    const answers = {};
+    const WA_NUMBER = '5511941713647'; // SUBSTITUA pelo seu número com DDI+DDD
+
+    // ===== ELEMENTS =====
+    const card = document.getElementById('quiz-card');
+    const progressFill = document.getElementById('progress-fill');
+    const progressLabel = document.getElementById('progress-label');
+    const progressPct = document.getElementById('progress-pct');
+
+    // ===== RENDER =====
+    function updateProgress() {
+      const pct = Math.round((current / questions.length) * 100);
+      progressFill.style.width = pct + '%';
+      progressPct.textContent = pct + '%';
+      progressLabel.textContent = `Pergunta ${Math.min(current + 1, questions.length)} de ${questions.length}`;
+    }
+
+    function render(dir = 1) {
+      const q = questions[current];
+      updateProgress();
+
+      card.classList.add('exit');
+      setTimeout(() => {
+        card.classList.remove('exit');
+        card.innerHTML = buildCard(q);
+        attachListeners(q);
+      }, dir === 1 ? 280 : 280);
+    }
+
+    function buildCard(q) {
+      let inputHTML = '';
+
+      if (q.type === 'text') {
+        const val = answers[q.key] || '';
+        inputHTML = `<input class="quiz-input" id="quiz-input" type="text" placeholder="${q.placeholder}" value="${val}" autocomplete="off" />`;
+      } else if (q.type === 'textarea') {
+        const val = answers[q.key] || '';
+        inputHTML = `<textarea class="quiz-input quiz-textarea" id="quiz-input" placeholder="${q.placeholder}">${val}</textarea>`;
+      } else if (q.type === 'radio') {
+        inputHTML = `<div class="options-list" id="options-list">` +
+          q.options.map((opt, i) => {
+            const sel = answers[q.key] === opt.label ? ' selected' : '';
+            return `<div class="option-item${sel}" data-val="${opt.label}" data-type="radio">
+              <div class="option-left">
+                <div class="option-num">${opt.num}</div>
+                <div class="option-text"><h4>${opt.label}</h4><p>${opt.desc}</p></div>
+              </div>
+              <div class="option-radio"></div>
+            </div>`;
+          }).join('') + `</div>`;
+      } else if (q.type === 'checkbox') {
+        const selected = answers[q.key] || [];
+        inputHTML = `<div class="options-list" id="options-list">` +
+          q.options.map((opt, i) => {
+            const sel = selected.includes(opt.label) ? ' selected' : '';
+            return `<div class="option-item${sel}" data-val="${opt.label}" data-type="checkbox">
+              <div class="option-left">
+                <div class="option-num">${opt.num}</div>
+                <div class="option-text"><h4>${opt.label}</h4><p>${opt.desc}</p></div>
+              </div>
+              <div class="option-radio"></div>
+            </div>`;
+          }).join('') + `</div>`;
+      }
+
+      const isLast = current === questions.length - 1;
+      const backBtn = current > 0
+        ? `<button class="btn-back" id="btn-back">← Voltar</button>`
+        : `<div></div>`;
+      const nextLabel = isLast ? 'Falar no WhatsApp' : 'Continuar';
+      const nextIcon = isLast 
+        ? `<img src="logo pinas/whatsapp/image.png" style="width: 28px; height: 28px; vertical-align: middle; margin-left: 6px; filter: brightness(0) invert(1);" alt="WhatsApp">`
+        : '→';
+      const nextClass = isLast ? 'btn-next btn-whatsapp' : 'btn-next';
+
+      let greetingHTML = '';
+      if (current > 0 && answers['empresa']) {
+        const hour = new Date().getHours();
+        let saudacao = 'Boa noite';
+        if (hour >= 5 && hour < 12) saudacao = 'Bom dia';
+        else if (hour >= 12 && hour < 18) saudacao = 'Boa tarde';
+        
+        const empresaNome = answers['empresa'];
+        let customText = `${saudacao}, <strong>${empresaNome}</strong>! Vamos continuar.`;
+
+        if (current === 2 && answers['tempo']) {
+            const t = answers['tempo'];
+            if (t.includes('começando')) {
+                customText = `Que incrível que a <strong>${empresaNome}</strong> está nascendo agora! Vamos estruturar isso.`;
+            } else {
+                customText = `Excelente! <strong>${t}</strong> mostra que a <strong>${empresaNome}</strong> tem uma boa bagagem.`;
+            }
+        } else if (current === 3 && answers['nicho']) {
+            customText = `Muito bacana atuar no segmento de <strong>${answers['nicho']}</strong>!`;
+        } else if (current === 4) {
+            customText = `Entendido. Vamos ajudar a <strong>${empresaNome}</strong> a se destacar no mercado!`;
+        } else if (current === 5) {
+            customText = `Ótimas escolhas! Para fechar o diagnóstico da <strong>${empresaNome}</strong> com chave de ouro:`;
+        }
+
+        greetingHTML = `<div style="color: var(--white-50); font-size: 1rem; font-weight: 500; margin-bottom: 8px;">${customText}</div>`;
+      }
+
+      return `
+        <div class="step-badge">${q.badge}</div>
+        ${greetingHTML}
+        <h1 class="quiz-question">${q.question}</h1>
+        <p class="quiz-hint">${q.hint}</p>
+        ${inputHTML}
+        <div class="quiz-divider"></div>
+        <div class="quiz-nav">
+          ${backBtn}
+          <button class="${nextClass}" id="btn-next" ${isLast ? '' : 'disabled'}>
+            ${nextLabel} <span class="btn-arrow">${nextIcon}</span>
+          </button>
+        </div>
+      `;
+    }
+
+    function attachListeners(q) {
+      const btnNext = document.getElementById('btn-next');
+      const btnBack = document.getElementById('btn-back');
+
+      if (btnBack) {
+        btnBack.addEventListener('click', () => {
+          current--;
+          render(-1);
+        });
+      }
+
+      // TEXT / TEXTAREA
+      if (q.type === 'text' || q.type === 'textarea') {
+        const input = document.getElementById('quiz-input');
+        // Enable next if already has value
+        if (input.value.trim().length > 0) btnNext.disabled = false;
+        input.addEventListener('input', () => {
+          btnNext.disabled = input.value.trim().length === 0;
+        });
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && q.type === 'text') advance(q, input.value.trim());
+        });
+        btnNext.addEventListener('click', () => {
+          const val = input.value.trim();
+          if (!val) return;
+          advance(q, val);
+        });
+        input.focus();
+      }
+
+      // RADIO
+      if (q.type === 'radio') {
+        const items = document.querySelectorAll('.option-item');
+        items.forEach(item => {
+          item.addEventListener('click', () => {
+            items.forEach(i => i.classList.remove('selected'));
+            item.classList.add('selected');
+            btnNext.disabled = false;
+          });
+        });
+        // pre-check
+        if (answers[q.key]) btnNext.disabled = false;
+
+        btnNext.addEventListener('click', () => {
+          const sel = document.querySelector('.option-item.selected');
+          if (!sel) return;
+          advance(q, sel.dataset.val);
+        });
+      }
+
+      // CHECKBOX
+      if (q.type === 'checkbox') {
+        const items = document.querySelectorAll('.option-item');
+        const updateCheckNext = () => {
+          const selected = document.querySelectorAll('.option-item.selected');
+          btnNext.disabled = selected.length === 0;
+        };
+        items.forEach(item => {
+          item.addEventListener('click', () => {
+            item.classList.toggle('selected');
+            updateCheckNext();
+          });
+        });
+        if ((answers[q.key] || []).length > 0) btnNext.disabled = false;
+
+        btnNext.addEventListener('click', () => {
+          const selected = [...document.querySelectorAll('.option-item.selected')].map(i => i.dataset.val);
+          if (selected.length === 0) return;
+          answers[q.key] = selected;
+          if (current === questions.length - 1) {
+            sendToWhatsApp();
+          } else {
+            current++;
+            render(1);
+          }
+        });
+      }
+    }
+
+    function advance(q, value) {
+      answers[q.key] = value;
+      if (current < questions.length - 1) {
+        current++;
+        render(1);
+      }
+    }
+
+    function buildWAMessage() {
+      const obj = answers['objetivos'];
+      const objText = Array.isArray(obj) ? obj.join(', ') : (obj || '');
+      const serv = answers['servicos_busca'];
+      const servText = Array.isArray(serv) ? serv.join(', ') : (serv || '');
+      return encodeURIComponent(
+        `Olá! Acabei de preencher o diagnóstico no site e gostaria de um orçamento.\n\n` +
+        `\u{1F3E2} *Empresa:* ${answers['empresa'] || '-'}\n` +
+        `\u{23F3} *Tempo no mercado:* ${answers['tempo'] || '-'}\n` +
+        `\u{1F3AF} *Nicho:* ${answers['nicho'] || '-'}\n` +
+        `\u{1F94A} *Concorrentes:* ${answers['concorrentes'] || '-'}\n` +
+        `\u{1F6E0}\u{FE0F} *Serviço desejado:* ${servText || '-'}\n` +
+        `\u{1F680} *Objetivos:* ${objText}\n\n` +
+        `Aguardo o contato!`
+      );
+    }
+
+    function sendToWhatsApp() {
+      const msg = buildWAMessage();
+      const url = `https://wa.me/${WA_NUMBER}?text=${msg}`;
+
+      // Animate progress to 100%
+      progressFill.style.width = '100%';
+      progressPct.textContent = '100%';
+
+      setTimeout(() => {
+        window.open(url, '_blank');
+      }, 400);
+    }
+
+    // ===== INIT =====
+    render(1);
+  </script>
+</body>
+
+</html>
